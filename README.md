@@ -1,4 +1,4 @@
-# Sample Android App for Ost Modern - using REST API
+# Sample Android App for Ost Modern
 
 Uses following libraries:
 * Retrofit and OkHttp for REST/HTTP
