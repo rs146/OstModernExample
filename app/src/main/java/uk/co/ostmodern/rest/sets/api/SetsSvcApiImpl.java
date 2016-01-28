@@ -37,6 +37,7 @@ public class SetsSvcApiImpl {
      */
     public SetsSvcApiImpl(Context context) {
 
+        errorRecorder = new ErrorRecorder();
         setsSvcApi = new RestAdapter.Builder()
                 .setEndpoint(Util.getBaseEndpointUrl(context))
                 .setClient(new OkClient(Util.retrieveOkHttpClient(context)))

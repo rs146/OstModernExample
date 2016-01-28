@@ -1,43 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:id="@+id/cardlist_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="@dimen/cardview_default_elevation"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:clickable="true"
+    android:layout_marginBottom="5dp"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp">
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:orientation="vertical"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="@dimen/cardview_default_elevation">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:gravity="center_vertical"
-        android:layout_height="?attr/listPreferredItemHeight"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
+
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/set_theme_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/set_image_height"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/set_picture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/set_picture" />
+
+            <TextView
+                android:id="@+id/set_title"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="#cc131212"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/set_title_text_size" />
+
+        </FrameLayout>
 
         <TextView
-            android:id="@+id/listitem_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/primary_text_default_material_light"
-            android:textSize="@dimen/abc_text_size_subhead_material" />
-
-        <TextView
-            android:id="@+id/listitem_subname"
+            android:id="@+id/meal_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="3dp"
+            android:layout_below="@+id/set_theme_frame_layout"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/set_description_top_padding"
             android:textColor="@color/secondary_text_default_material_light"
-            android:textSize="@dimen/abc_text_size_caption_material" />
-    </LinearLayout>
+            android:textSize="@dimen/set_description_text_size"
+            android:textStyle="italic" />
+
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>
