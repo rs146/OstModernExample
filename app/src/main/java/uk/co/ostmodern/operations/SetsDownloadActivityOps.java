@@ -11,6 +11,7 @@ import uk.co.ostmodern.activities.SetsDownloadActivity;
 import uk.co.ostmodern.fragments.SetsDownloadFragment;
 import uk.co.ostmodern.rest.sets.response.SetResponseObject;
 import uk.co.ostmodern.util.AsyncTaskResult;
+import uk.co.ostmodern.util.Util;
 
 /**
  * Operations class for the {@link uk.co.ostmodern.activities.SetsDownloadActivity}.
@@ -39,6 +40,15 @@ public class SetsDownloadActivityOps {
     private void initViewFieldsAndToolbar() {
         this.mToolbar = new WeakReference<>((Toolbar) mActivity.get().findViewById(R.id.toolbar));
         mActivity.get().setSupportActionBar(mToolbar.get());
+    }
+
+    /**
+     * Set the base endpoint url for the rest of the app.
+     */
+    public void setBaseEndpointUrl() {
+        if (!Util.isBaseEndpointUrlPersisted(mActivity.get())) {
+            Util.setBaseEndpointUrl(mActivity.get());
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
+import uk.co.ostmodern.R;
 import uk.co.ostmodern.constants.AppConstants;
 
 /**
@@ -15,6 +16,29 @@ import uk.co.ostmodern.constants.AppConstants;
  * @author rahulsingh
  */
 public class Util {
+
+    /**
+     * Set the Base Endpoint URL by persisting it to SharedPreferences K-V store.
+     *
+     * @param context app context
+     */
+    public static void setBaseEndpointUrl(Context context) {
+        String baseEndpointUrl = context.getResources().getString(R.string.base_server_endpoint_url);
+        SharedPreferences.Editor editor = context.getSharedPreferences(AppConstants.SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE).edit();
+        editor.putString(AppConstants.BASE_ENDPOINT_URL_KEY, baseEndpointUrl);
+        editor.apply();
+    }
+
+    /**
+     * Determines if the base endpoint URL has been persisted to SharedPreferences store.
+     *
+     * @param context app context
+     * @return true if has been persisted, false otherwise
+     */
+    public static boolean isBaseEndpointUrlPersisted(Context context) {
+        return (getBaseEndpointUrl(context) != null);
+    }
 
     /**
      * Retrieve the base endpoint url from the SharedPreferences storage mechanism.

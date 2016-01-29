@@ -33,6 +33,7 @@ public class SetsDownloadActivity extends AppCompatActivity implements SetsDownl
 
         handleConfigurationChanges();
 
+        mSetsDownloadActivityOps.setBaseEndpointUrl();
         mSetsDownloadActivityOps.downloadData();
     }
 

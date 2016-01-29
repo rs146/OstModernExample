@@ -12,7 +12,8 @@ import java.util.HashMap;
 /**
  * Retains and manages state information between runtime configuration
  * changes to an Activity.  Plays the role of the "Originator" in the
- * Memento pattern.
+ * Memento pattern. Memento pattern all about capturing state of object(s)
+ * so that we can restore them on a configuration change.
  */
 public class RetainedFragmentManager {
     /**
@@ -125,7 +126,7 @@ public class RetainedFragmentManager {
     /**
      * "Headless" Fragment that retains state information between
      * configuration changes.  Plays the role of the "Memento" in the
-     * Memento pattern.
+     * Memento pattern as it is the store for the object(s) state information.
      */
     public static class RetainedFragment extends Fragment {
         /**
