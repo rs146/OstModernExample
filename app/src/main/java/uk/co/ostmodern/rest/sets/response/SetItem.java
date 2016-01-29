@@ -1,5 +1,8 @@
 package uk.co.ostmodern.rest.sets.response;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -7,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  *
  * @author rahulsingh
  */
-public class SetItem {
+public class SetItem implements Parcelable {
 
     private String self;
     @SerializedName(value = "content_type")
@@ -48,4 +51,37 @@ public class SetItem {
     public void setScheduleUrl(String scheduleUrl) {
         this.scheduleUrl = scheduleUrl;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.self);
+        dest.writeString(this.contentType);
+        dest.writeString(this.setUrl);
+        dest.writeString(this.scheduleUrl);
+    }
+
+    public SetItem() {
+    }
+
+    protected SetItem(Parcel in) {
+        this.self = in.readString();
+        this.contentType = in.readString();
+        this.setUrl = in.readString();
+        this.scheduleUrl = in.readString();
+    }
+
+    public static final Parcelable.Creator<SetItem> CREATOR = new Parcelable.Creator<SetItem>() {
+        public SetItem createFromParcel(Parcel source) {
+            return new SetItem(source);
+        }
+
+        public SetItem[] newArray(int size) {
+            return new SetItem[size];
+        }
+    };
 }

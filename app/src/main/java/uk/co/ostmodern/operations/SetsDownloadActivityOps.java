@@ -80,6 +80,7 @@ public class SetsDownloadActivityOps {
      * Callback implementation for the Async Task onPreExecute() hook method.
      */
     public void getSetsDataOnPreExecute() {
+        Log.d(TAG, "In onPreExecute()");
     }
 
     /**

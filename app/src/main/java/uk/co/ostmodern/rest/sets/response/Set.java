@@ -1,7 +1,11 @@
 package uk.co.ostmodern.rest.sets.response;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +13,7 @@ import java.util.List;
  *
  * @author rahulsingh
  */
-public class Set {
+public class Set implements Parcelable {
 
     private String self;
     private String uid;
@@ -114,4 +118,52 @@ public class Set {
     public void setEndsOn(String endsOn) {
         this.endsOn = endsOn;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.self);
+        dest.writeString(this.uid);
+        dest.writeString(this.slug);
+        dest.writeString(this.summary);
+        dest.writeString(this.body);
+        dest.writeString(this.hierarchyUrl);
+        dest.writeInt(this.filmCount);
+        dest.writeList(this.items);
+        dest.writeStringList(this.imageUrls);
+        dest.writeString(this.created);
+        dest.writeString(this.endsOn);
+    }
+
+    public Set() {
+    }
+
+    protected Set(Parcel in) {
+        this.self = in.readString();
+        this.uid = in.readString();
+        this.slug = in.readString();
+        this.summary = in.readString();
+        this.body = in.readString();
+        this.hierarchyUrl = in.readString();
+        this.filmCount = in.readInt();
+        this.items = new ArrayList<>();
+        in.readList(this.items, List.class.getClassLoader());
+        this.imageUrls = in.createStringArrayList();
+        this.created = in.readString();
+        this.endsOn = in.readString();
+    }
+
+    public static final Parcelable.Creator<Set> CREATOR = new Parcelable.Creator<Set>() {
+        public Set createFromParcel(Parcel source) {
+            return new Set(source);
+        }
+
+        public Set[] newArray(int size) {
+            return new Set[size];
+        }
+    };
 }
