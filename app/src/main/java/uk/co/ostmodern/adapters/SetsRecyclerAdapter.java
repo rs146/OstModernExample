@@ -73,7 +73,13 @@ public class SetsRecyclerAdapter extends RecyclerView.Adapter<SetsRecyclerAdapte
                             Log.d(TAG, "unable to load image successfully");
                         }
                     });
+        } else {
+            Picasso.with(mContext.get()).load(R.drawable.default_image)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .fit().centerCrop()
+                    .into(holder.imageView);
         }
+        holder.setTitle.setText(setData.getTitle());
     }
 
     @Override

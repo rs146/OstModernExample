@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class Set implements Parcelable {
 
+    private String title;
     private String self;
     private String uid;
     private String slug;
@@ -30,6 +31,16 @@ public class Set implements Parcelable {
     private String created;
     @SerializedName(value = "ends_on")
     private String endsOn;
+
+    private List<SetImage> setImageList;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getSelf() {
         return self;
@@ -119,6 +130,21 @@ public class Set implements Parcelable {
         this.endsOn = endsOn;
     }
 
+    public List<SetImage> getSetImageList() {
+        return setImageList;
+    }
+
+    public void setSetImageList(List<SetImage> setImageList) {
+        this.setImageList = setImageList;
+    }
+
+    public void addSetImage(SetImage setImage) {
+        if (setImageList == null) {
+            setImageList = new ArrayList<>();
+        }
+        setImageList.add(setImage);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -126,6 +152,7 @@ public class Set implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.title);
         dest.writeString(this.self);
         dest.writeString(this.uid);
         dest.writeString(this.slug);
@@ -133,16 +160,18 @@ public class Set implements Parcelable {
         dest.writeString(this.body);
         dest.writeString(this.hierarchyUrl);
         dest.writeInt(this.filmCount);
-        dest.writeList(this.items);
+        dest.writeTypedList(items);
         dest.writeStringList(this.imageUrls);
         dest.writeString(this.created);
         dest.writeString(this.endsOn);
+        dest.writeTypedList(setImageList);
     }
 
     public Set() {
     }
 
     protected Set(Parcel in) {
+        this.title = in.readString();
         this.self = in.readString();
         this.uid = in.readString();
         this.slug = in.readString();
@@ -150,11 +179,11 @@ public class Set implements Parcelable {
         this.body = in.readString();
         this.hierarchyUrl = in.readString();
         this.filmCount = in.readInt();
-        this.items = new ArrayList<>();
-        in.readList(this.items, List.class.getClassLoader());
+        this.items = in.createTypedArrayList(SetItem.CREATOR);
         this.imageUrls = in.createStringArrayList();
         this.created = in.readString();
         this.endsOn = in.readString();
+        this.setImageList = in.createTypedArrayList(SetImage.CREATOR);
     }
 
     public static final Parcelable.Creator<Set> CREATOR = new Parcelable.Creator<Set>() {

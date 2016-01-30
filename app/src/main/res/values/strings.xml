@@ -9,4 +9,8 @@
 
     <string name="base_server_endpoint_url">http://feature-code-test.skylark-cms.qa.aws.ostmodern.co.uk:8000</string>
     <string name="title_activity_sets_list_view">SetsListViewActivity</string>
+
+    <!-- HTTP API Connection error message -->
+    <string name="api_connect_error">Unable to connect to API. Please check your internet connection</string>
+    <string name="http_connect_error">There was an unexpected error on the server</string>
 </resources>

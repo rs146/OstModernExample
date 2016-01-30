@@ -22,7 +22,11 @@
         <activity
             android:name=".activities.SetsListViewActivity"
             android:label="@string/title_activity_sets_list_view"
-            android:theme="@style/MyTheme"></activity>
+            android:theme="@style/MyTheme" />
+
+        <service
+            android:name=".services.DownloadDataService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

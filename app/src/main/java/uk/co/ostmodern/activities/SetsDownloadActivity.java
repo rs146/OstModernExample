@@ -8,6 +8,7 @@ import uk.co.ostmodern.R;
 import uk.co.ostmodern.fragments.SetsDownloadFragment;
 import uk.co.ostmodern.operations.SetsDownloadActivityOps;
 import uk.co.ostmodern.rest.sets.response.SetResponseObject;
+import uk.co.ostmodern.services.ServiceResult;
 import uk.co.ostmodern.util.AsyncTaskResult;
 import uk.co.ostmodern.util.RetainedFragmentManager;
 
@@ -16,7 +17,7 @@ import uk.co.ostmodern.util.RetainedFragmentManager;
  *
  * @author rahulsingh
  */
-public class SetsDownloadActivity extends AppCompatActivity implements SetsDownloadFragment.TaskCallbacks {
+public class SetsDownloadActivity extends AppCompatActivity implements ServiceResult {
 
     private static final String TAG = SetsDownloadActivity.class.getSimpleName();
     private static final String SETS_DOWNLOAD_ACT_OPS_STATE = "DOWNLOAD_ACT_OPS_STATE";
@@ -63,12 +64,7 @@ public class SetsDownloadActivity extends AppCompatActivity implements SetsDownl
     }
 
     @Override
-    public void getSetsDataOnPreExecute() {
-        mSetsDownloadActivityOps.getSetsDataOnPreExecute();
-    }
-
-    @Override
-    public void getSetsDataOnPostExecute(AsyncTaskResult<SetResponseObject> result) {
-        mSetsDownloadActivityOps.getSetsDataOnPostExecute(result);
+    public void onServiceResult(int resultCode, Bundle data) {
+        mSetsDownloadActivityOps.onServiceResult(resultCode, data);
     }
 }

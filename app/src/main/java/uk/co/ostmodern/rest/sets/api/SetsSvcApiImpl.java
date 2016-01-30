@@ -14,6 +14,7 @@ import uk.co.ostmodern.rest.exceptions.InternalServerErrorException;
 import uk.co.ostmodern.rest.exceptions.ResourceNotFoundException;
 import uk.co.ostmodern.rest.exceptions.ServiceUnavailableException;
 import uk.co.ostmodern.rest.exceptions.UnauthorizedException;
+import uk.co.ostmodern.rest.sets.response.SetImage;
 import uk.co.ostmodern.rest.sets.response.SetResponseObject;
 import uk.co.ostmodern.util.Util;
 
@@ -87,5 +88,49 @@ public class SetsSvcApiImpl {
             }
         }
         return setResponseObject;
+    }
+
+    /**
+     * Get a set image.
+     *
+     * @param imageApiPath                      image api path
+     * @return                                  SetImage
+     * @throws APIConnectionException           if connection to API fails
+     * @throws BadRequestException              if HTTP 400 occurs
+     * @throws UnauthorizedException            if HTTP 401 occurs
+     * @throws ResourceNotFoundException        if HTTP 404 occurs
+     * @throws InternalServerErrorException     if HTTP 500 occurs
+     * @throws ServiceUnavailableException      if HTTP 503 occurs
+     * @throws HttpConnectionException          if other HTTP exception occurs
+     */
+    public SetImage getSetImage(String imageApiPath) throws APIConnectionException, BadRequestException,
+            UnauthorizedException, ResourceNotFoundException, InternalServerErrorException,
+            ServiceUnavailableException, HttpConnectionException {
+
+        SetImage setImage = new SetImage();
+        try {
+            setImage = setsSvcApi.getSetImage(imageApiPath);
+        } catch (Exception e) {
+            if (e.getCause() instanceof APIConnectionException) {
+                Log.d(TAG, "API Connection handled in ApiImpl");
+                throw new APIConnectionException();
+            } else if (errorRecorder.getError().getKind().equals(RetrofitError.Kind.HTTP)) {
+                switch (errorRecorder.getError().getResponse().getStatus()) {
+                    case 400:
+                        throw new BadRequestException();
+                    case 401:
+                        throw new UnauthorizedException();
+                    case 404:
+                        throw new ResourceNotFoundException();
+                    case 500:
+                        throw new InternalServerErrorException();
+                    case 503:
+                        throw new ServiceUnavailableException();
+                    default:
+                        throw new HttpConnectionException();
+                }
+            }
+        }
+        return setImage;
     }
 }
