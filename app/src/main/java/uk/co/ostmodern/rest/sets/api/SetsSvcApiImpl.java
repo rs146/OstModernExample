@@ -107,10 +107,13 @@ public class SetsSvcApiImpl {
             UnauthorizedException, ResourceNotFoundException, InternalServerErrorException,
             ServiceUnavailableException, HttpConnectionException {
 
+        String relativeImageApiPath = Util.getRelativeImageApiPath(imageApiPath);
         SetImage setImage = new SetImage();
         try {
-            setImage = setsSvcApi.getSetImage(imageApiPath);
+            setImage = setsSvcApi.getSetImage(relativeImageApiPath);
+            Log.d(TAG, "set image url: " + setImage.getFullImageUrl());
         } catch (Exception e) {
+            Log.d(TAG, "exception in image download: " + e.toString());
             if (e.getCause() instanceof APIConnectionException) {
                 Log.d(TAG, "API Connection handled in ApiImpl");
                 throw new APIConnectionException();

@@ -65,6 +65,21 @@ public class Util {
         return okHttpClient;
     }
 
+    /**
+     * The API contains a forward-slash at the beginning, e.g. /api/images/img_name.
+     * This method extracts the API path and removes the starting forward-slash to avoid API
+     * calls with two-forward slashed, e.g. //api/images/img_name.
+     *
+     * @param imageApiPath  image api path
+     * @return              relative image api path to that of the Resource server
+     */
+    public static String getRelativeImageApiPath(String imageApiPath) {
+        if (imageApiPath != null && !imageApiPath.isEmpty()) {
+            return imageApiPath.substring(1);
+        }
+        return imageApiPath;
+    }
+
     private Util() {
         throw new AssertionError();
     }

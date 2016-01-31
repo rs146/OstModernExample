@@ -13,7 +13,7 @@ import uk.co.ostmodern.rest.sets.response.SetResponseObject;
 public interface SetsSvcApi {
 
     String SETS_SVC_PATH = "/api/sets/";
-    String SETS_IMAGES_SVC_PATH = "{imageApiPath}";
+    String SETS_IMAGES_SVC_PATH = "/{imageApiPath}";
 
     @GET(SETS_SVC_PATH)
     SetResponseObject getSetsList();
