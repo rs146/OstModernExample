@@ -123,6 +123,7 @@ public class DownloadDataService extends IntentService {
                 for (String setImagePath : set.getImageUrls()) {
                     SetImage setImage = setsSvcApi.getSetImage(setImagePath);
                     set.addSetImage(setImage);
+                    Log.d(TAG, "Image path url: " + setImage.getFullImageUrl());
                 }
             }
         } catch (APIConnectionException e) {

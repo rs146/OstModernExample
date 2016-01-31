@@ -55,7 +55,8 @@
             android:paddingTop="@dimen/set_description_top_padding"
             android:textColor="@color/secondary_text_default_material_light"
             android:textSize="@dimen/set_description_text_size"
-            android:textStyle="italic" />
+            android:textStyle="italic"
+            android:ellipsize="end" />
 
     </RelativeLayout>
 

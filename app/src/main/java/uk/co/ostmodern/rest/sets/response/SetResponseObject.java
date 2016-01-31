@@ -29,15 +29,14 @@ public class SetResponseObject implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeList(this.sets);
+        dest.writeTypedList(sets);
     }
 
     public SetResponseObject() {
     }
 
     protected SetResponseObject(Parcel in) {
-        this.sets = new ArrayList<>();
-        in.readList(this.sets, List.class.getClassLoader());
+        this.sets = in.createTypedArrayList(Set.CREATOR);
     }
 
     public static final Parcelable.Creator<SetResponseObject> CREATOR = new Parcelable.Creator<SetResponseObject>() {

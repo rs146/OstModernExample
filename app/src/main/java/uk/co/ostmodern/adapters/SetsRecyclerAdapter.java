@@ -55,9 +55,9 @@ public class SetsRecyclerAdapter extends RecyclerView.Adapter<SetsRecyclerAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         Set setData = mSetsList.get(position);
 
-        if (CollectionUtils.isEmpty(setData.getImageUrls())) {
-            String setDataImageUrl = setData.getImageUrls().get(0);
-            Picasso.with(mContext.get()).load(Util.getBaseEndpointUrl(mContext.get()) + setDataImageUrl)
+        if (!CollectionUtils.isEmpty(setData.getSetImageList())) {
+            String setDataImageUrl = setData.getSetImageList().get(0).getFullImageUrl();
+            Picasso.with(mContext.get()).load(setDataImageUrl)
                     .placeholder(R.drawable.default_image)
                     .error(R.drawable.default_image)
                     .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -80,6 +80,7 @@ public class SetsRecyclerAdapter extends RecyclerView.Adapter<SetsRecyclerAdapte
                     .into(holder.imageView);
         }
         holder.setTitle.setText(setData.getTitle());
+        holder.setDescription.setText(setData.getBody());
     }
 
     @Override

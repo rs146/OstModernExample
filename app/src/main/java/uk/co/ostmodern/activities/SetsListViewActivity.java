@@ -47,6 +47,7 @@ public class SetsListViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sets_list_view);
 
         handleConfigurationChanges();
+        mSetsListViewActivityOps.setUpRecyclerView();
     }
 
     private void handleConfigurationChanges() {

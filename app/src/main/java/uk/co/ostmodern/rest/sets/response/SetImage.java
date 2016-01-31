@@ -3,6 +3,8 @@ package uk.co.ostmodern.rest.sets.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Represents a Set's image from the response. A {@link Set} could have many of these instances
  * associated with it.
@@ -11,6 +13,7 @@ import android.os.Parcelable;
  */
 public class SetImage implements Parcelable {
 
+    @SerializedName(value = "url")
     private String fullImageUrl;
 
     public String getFullImageUrl() {

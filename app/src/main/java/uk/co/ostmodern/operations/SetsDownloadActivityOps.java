@@ -83,6 +83,11 @@ public class SetsDownloadActivityOps {
         } else if (resultCode == HttpURLConnection.HTTP_OK) {
             // start intent to List view
             SetResponseObject setResponseData = DownloadDataService.getSetResponseData(data);
+            if (setResponseData == null) {
+                Log.d(TAG, "set response data is null");
+            } else {
+                Log.d(TAG, "set response not null: " + setResponseData.getSets().get(0).getTitle());
+            }
 
             // activate the List Activity
             Intent intent = SetsListViewActivity.makeIntent(mActivity.get(), setResponseData);

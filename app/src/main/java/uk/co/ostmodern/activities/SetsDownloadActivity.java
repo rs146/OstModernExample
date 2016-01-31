@@ -5,11 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import uk.co.ostmodern.R;
-import uk.co.ostmodern.fragments.SetsDownloadFragment;
 import uk.co.ostmodern.operations.SetsDownloadActivityOps;
-import uk.co.ostmodern.rest.sets.response.SetResponseObject;
 import uk.co.ostmodern.services.ServiceResult;
-import uk.co.ostmodern.util.AsyncTaskResult;
 import uk.co.ostmodern.util.RetainedFragmentManager;
 
 /**
