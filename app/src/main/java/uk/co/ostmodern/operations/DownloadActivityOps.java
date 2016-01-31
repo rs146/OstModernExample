@@ -13,24 +13,26 @@ import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 
 import uk.co.ostmodern.R;
-import uk.co.ostmodern.activities.SetsDownloadActivity;
+import uk.co.ostmodern.activities.DownloadActivity;
+import uk.co.ostmodern.activities.EpisodeViewActivity;
 import uk.co.ostmodern.activities.SetsListViewActivity;
+import uk.co.ostmodern.rest.episodes.response.Episode;
 import uk.co.ostmodern.rest.sets.response.SetResponseObject;
 import uk.co.ostmodern.services.DownloadDataService;
 import uk.co.ostmodern.services.ServiceResultHandler;
 import uk.co.ostmodern.util.Util;
 
 /**
- * Operations class for the {@link uk.co.ostmodern.activities.SetsDownloadActivity}.
+ * Operations class for the {@link DownloadActivity}.
  * Separation of concerns between the Activity view and the operations of an Activity.
  *
  * @author rahulsingh
  */
-public class SetsDownloadActivityOps {
+public class DownloadActivityOps {
 
-    private static final String TAG = SetsDownloadActivityOps.class.getSimpleName();
+    private static final String TAG = DownloadActivityOps.class.getSimpleName();
 
-    private WeakReference<SetsDownloadActivity> mActivity;
+    private WeakReference<DownloadActivity> mActivity;
     private WeakReference<Toolbar> mToolbar;
     private WeakReference<RelativeLayout> mRootRelativeLayout;
     private Handler mServiceResultHandler;
@@ -40,7 +42,7 @@ public class SetsDownloadActivityOps {
      *
      * @param activity activity
      */
-    public SetsDownloadActivityOps(SetsDownloadActivity activity) {
+    public DownloadActivityOps(DownloadActivity activity) {
         this.mActivity = new WeakReference<>(activity);
         initViewFieldsAndToolbar();
         setServiceResultHandler();
@@ -68,11 +70,17 @@ public class SetsDownloadActivityOps {
 
     /**
      * Activates the download of the data by creating an Intent to start the
-     * {@link uk.co.ostmodern.services.DownloadDataService} IntentService.
+     * {@link uk.co.ostmodern.services.DownloadDataService} IntentService. It checks the DownloadActivity's
+     * intent action to filter what download action needs to be performed.
      */
     public void downloadData() {
-        Intent intent = DownloadDataService.makeIntentForSetsAction(mActivity.get(), mServiceResultHandler);
-        mActivity.get().startService(intent);
+        if (getActionFromIntent().equals(DownloadDataService.ACTION_EPISODE)) {
+            Intent intent = DownloadDataService.makeIntentForEpisodeAction(mActivity.get(), mServiceResultHandler);
+            mActivity.get().startService(intent);
+        } else {
+            Intent intent = DownloadDataService.makeIntentForSetsAction(mActivity.get(), mServiceResultHandler);
+            mActivity.get().startService(intent);
+        }
     }
 
     public void onServiceResult(int resultCode, Bundle data) {
@@ -81,17 +89,27 @@ public class SetsDownloadActivityOps {
             Snackbar snackbar = Snackbar.make(mRootRelativeLayout.get(), R.string.api_connect_error, Snackbar.LENGTH_LONG);
             snackbar.show();
         } else if (resultCode == HttpURLConnection.HTTP_OK) {
-            // start intent to List view
-            SetResponseObject setResponseData = DownloadDataService.getSetResponseData(data);
-            if (setResponseData == null) {
-                Log.d(TAG, "set response data is null");
-            } else {
-                Log.d(TAG, "set response not null: " + setResponseData.getSets().get(0).getTitle());
-            }
 
-            // activate the List Activity
-            Intent intent = SetsListViewActivity.makeIntent(mActivity.get(), setResponseData);
-            mActivity.get().startActivity(intent);
+            if (DownloadDataService.ACTION_EPISODE.equals(getActionFromIntent())) {
+                Episode episodeData = DownloadDataService.getEpisodeData(data);
+                if (episodeData == null) {
+                    Log.d(TAG, "episode data from service is null");
+                }
+
+                Intent intent = EpisodeViewActivity.makeIntent(mActivity.get(), episodeData);
+                mActivity.get().startActivity(intent);
+            } else {
+                // start intent to List view
+                SetResponseObject setResponseData = DownloadDataService.getSetResponseData(data);
+                if (setResponseData == null) {
+                    Log.d(TAG, "set response data is null");
+                }
+
+                // activate the List Activity
+                Intent intent = SetsListViewActivity.makeIntent(mActivity.get(), setResponseData);
+                mActivity.get().startActivity(intent);
+            }
+            mActivity.get().finish();
         } else {
             // HTTP error codes
             Snackbar snackbar = Snackbar.make(mRootRelativeLayout.get(), R.string.http_connect_error, Snackbar.LENGTH_LONG);
@@ -105,9 +123,18 @@ public class SetsDownloadActivityOps {
      *
      * @param activity activity instance
      */
-    public void onConfigurationChange(SetsDownloadActivity activity) {
+    public void onConfigurationChange(DownloadActivity activity) {
         this.mActivity = new WeakReference<>(activity);
         initViewFieldsAndToolbar();
         setServiceResultHandler();
+    }
+
+    /**
+     * Retrieve the action value from the activity's intent.
+     *
+     * @return  String action value
+     */
+    private String getActionFromIntent() {
+        return mActivity.get().getIntent().getAction();
     }
 }

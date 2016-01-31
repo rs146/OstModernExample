@@ -1,5 +1,6 @@
 package uk.co.ostmodern.operations;
 
+import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import java.lang.ref.WeakReference;
 
 import uk.co.ostmodern.R;
+import uk.co.ostmodern.activities.DownloadActivity;
 import uk.co.ostmodern.activities.SetsListViewActivity;
 import uk.co.ostmodern.adapters.SetsRecyclerAdapter;
 import uk.co.ostmodern.constants.AppConstants;
@@ -41,6 +43,7 @@ public class SetsListViewActivityOps {
     private void initializeViews() {
         this.mToolbar = new WeakReference<>((Toolbar) mActivity.get().findViewById(R.id.toolbar));
         mActivity.get().setSupportActionBar(mToolbar.get());
+
         this.mRecyclerView = new WeakReference<>((RecyclerView) mActivity.get().findViewById(R.id.setsListRecyclerView));
     }
 
@@ -66,6 +69,14 @@ public class SetsListViewActivityOps {
         this.mActivity = new WeakReference<>(activity);
 
         initializeViews();
+    }
+
+    /**
+     * App bar overflow menu action to view an episode.
+     */
+    public void actionViewEpisode() {
+        Intent intent = DownloadActivity.makeIntentForEpisodeDownload(mActivity.get());
+        mActivity.get().startActivity(intent);
     }
 
     private SetResponseObject getSetResponseObjectFromIntent() {

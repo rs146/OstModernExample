@@ -13,6 +13,9 @@ public class AppConstants {
     // sets list activity constants
     public static final String SET_RESPONSE_EXTRA_KEY = "uk.co.ostmodern.sets.response";
 
+    // episode activity constants
+    public static final String EPISODE_EXTRA_KEY = "uk.co.ostmodern.episode.response";
+
     // HTTP other failures
     public static final int OTHER_HTTP_FAILURE = 1;
 }

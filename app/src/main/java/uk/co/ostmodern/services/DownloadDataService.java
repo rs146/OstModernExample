@@ -15,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.util.List;
 
 import uk.co.ostmodern.constants.AppConstants;
+import uk.co.ostmodern.rest.episodes.api.EpisodesSvcApiImpl;
+import uk.co.ostmodern.rest.episodes.response.Episode;
 import uk.co.ostmodern.rest.exceptions.APIConnectionException;
 import uk.co.ostmodern.rest.exceptions.BadRequestException;
 import uk.co.ostmodern.rest.exceptions.HttpConnectionException;
@@ -40,10 +42,11 @@ public class DownloadDataService extends IntentService {
 
     // Actions the IntentService can perform
     private static final String ACTION_SETS = "uk.co.ostmodern.services.action.SETS";
-    private static final String ACTION_EPISODE = "uk.co.ostmodern.services.action.EPISODE";
+    public static final String ACTION_EPISODE = "uk.co.ostmodern.services.action.EPISODE";
 
     private static final String MESSENGER = "MESSENGER";
     private static final String SETS_BUNDLE_DATA_KEY = "SETS_DATA";
+    private static final String EPISODE_BUNDLE_DATA_KEY = "EPISODE_DATA";
 
     public DownloadDataService() {
         super("DownloadDataService");
@@ -96,6 +99,16 @@ public class DownloadDataService extends IntentService {
         return data.getParcelable(SETS_BUNDLE_DATA_KEY);
     }
 
+    /**
+     * Retrieve the Episode data from the Bundle.
+     *
+     * @param data      bundle
+     * @return          Episode data
+     */
+    public static Episode getEpisodeData(Bundle data) {
+        return data.getParcelable(EPISODE_BUNDLE_DATA_KEY);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -123,7 +136,6 @@ public class DownloadDataService extends IntentService {
                 for (String setImagePath : set.getImageUrls()) {
                     SetImage setImage = setsSvcApi.getSetImage(setImagePath);
                     set.addSetImage(setImage);
-                    Log.d(TAG, "Image path url: " + setImage.getFullImageUrl());
                 }
             }
         } catch (APIConnectionException e) {
@@ -155,11 +167,38 @@ public class DownloadDataService extends IntentService {
      * Handle action ACTION_EPISODE in the worker thread as it is within the onHandleIntent hook method.
      */
     private void handleActionEpisode(Messenger messenger) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        EpisodesSvcApiImpl episodesSvcApi = new EpisodesSvcApiImpl(getApplicationContext());
+
+        Episode episode = new Episode();
+        try {
+            episode = episodesSvcApi.getEpisode();
+        } catch (APIConnectionException e) {
+            Log.d(TAG, "API Connection failure to API");
+            sendResponse(messenger, Activity.RESULT_CANCELED, episode);
+        } catch (BadRequestException e) {
+            Log.d(TAG, "Bad Request Exception to API");
+            sendResponse(messenger, HttpURLConnection.HTTP_BAD_REQUEST, episode);
+        } catch (UnauthorizedException e) {
+            Log.d(TAG, "Unauthorized Exception to API");
+            sendResponse(messenger, HttpURLConnection.HTTP_UNAUTHORIZED, episode);
+        } catch (ResourceNotFoundException e) {
+            Log.d(TAG, "Resource Not Found Exception to API");
+            sendResponse(messenger, HttpURLConnection.HTTP_NOT_FOUND, episode);
+        } catch (InternalServerErrorException e) {
+            Log.d(TAG, "Internal Server Exception to API");
+            sendResponse(messenger, HttpURLConnection.HTTP_INTERNAL_ERROR, episode);
+        } catch (ServiceUnavailableException e) {
+            Log.d(TAG, "Service Unavailable Exception to API");
+            sendResponse(messenger, HttpURLConnection.HTTP_UNAVAILABLE, episode);
+        } catch (HttpConnectionException e) {
+            Log.d(TAG, "Other HTTP Exception to API");
+            sendResponse(messenger, AppConstants.OTHER_HTTP_FAILURE, episode);
+        }
+        sendResponse(messenger, HttpURLConnection.HTTP_OK, episode);
     }
 
     /**
-     * Send the response back to the client Activity.
+     * Send the response back to the client Activity for a set response.
      *
      * @param messenger             messenger
      * @param resultCode            result code matching a HTTP result code
@@ -176,11 +215,28 @@ public class DownloadDataService extends IntentService {
     }
 
     /**
-     * Factory method to create a reply message.
+     * Send the response back to the client Activity for an episode.
+     *
+     * @param messenger             messenger
+     * @param resultCode            result code matching a HTTP result code
+     * @param episode               episode response object
+     */
+    private void sendResponse(Messenger messenger, int resultCode, Episode episode) {
+        Message message = makeReplyMessage(resultCode, episode);
+
+        try {
+            messenger.send(message);
+        } catch (RemoteException re) {
+            Log.d(TAG, "Unable to send message back to the client");
+        }
+    }
+
+    /**
+     * Factory method to create a reply message containing a Set Response object.
      *
      * @param resultCode            result code (HTTP result code for client to access)
      * @param setResponseObject     set response data object
-     * @return Message message
+     * @return                      Message message
      */
     private Message makeReplyMessage(int resultCode, SetResponseObject setResponseObject) {
         Message message = Message.obtain();
@@ -188,6 +244,25 @@ public class DownloadDataService extends IntentService {
 
         Bundle data = new Bundle();
         data.putParcelable(SETS_BUNDLE_DATA_KEY, setResponseObject);
+
+        message.setData(data);
+
+        return message;
+    }
+
+    /**
+     * Factory method to create a reply message containing an {@link Episode}.
+     *
+     * @param resultCode            result code (HTTP result code for client to access
+     * @param episode               episode data
+     * @return                      Message message
+     */
+    private Message makeReplyMessage(int resultCode, Episode episode) {
+        Message message = Message.obtain();
+        message.arg1 = resultCode;
+
+        Bundle data = new Bundle();
+        data.putParcelable(EPISODE_BUNDLE_DATA_KEY, episode);
 
         message.setData(data);
 
