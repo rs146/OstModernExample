@@ -13,8 +13,11 @@ Please ensure you have the following tools/libraries installed on your computer:
 * Gradle build system for dependency management (ideally Android Studio)
 
 To build the project, please follow these steps:
+
 1. Ensure you have an Internet connection for Gradle to complete it's dependency management task.
+
 2. In Android Studio, choose "Make Project" from the Menu.
+
 3. Debug/Run the app.
 
 Note: Android Emulator Google Nexus 5 (Android 5.1.1) was used for development/testing.
